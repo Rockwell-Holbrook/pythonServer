@@ -4,6 +4,8 @@ import os, sys, datetime
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'vnkdjnfjknfl1232#'
+#app.run(host = '0.0.0.0',port=5000)
+#app.config()
 socketio = SocketIO(app)
 messages = []
 
@@ -23,7 +25,7 @@ def handle_my_custom_event(json, methods=['GET', 'POST']):
 
         if (str(json['message']) == "!exit"):
             socketio.emit('quit','quitting now')
-            os._exit
+            socketio.disconnect()
 
         # The Logic for our !username command.
         elif (str(json['message']) == "!username"):
