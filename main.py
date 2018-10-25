@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 from flask_socketio import SocketIO
 import sys
+import os
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'vnkdjnfjknfl1232#'
 socketio = SocketIO(app)
@@ -21,13 +22,17 @@ def handle_my_custom_event(json, methods=['GET', 'POST']):
         print(str(json['message']))
 
         if (str(json['message']) == "!exit"):
-            quit()
+            socketio.emit('quit','quitting now')
+            os._exit
 
-        if (str(json['message']) == "!username"):
+        elif (str(json['message']) == "!username"):
             json['message'] = "Your Username is: " + json['user_name']
         
         elif (str(json['message']) == "!help"):
             json['message'] = "Commands: !username, !clear, and of course !help!"
+
+        elif (str(json['message']).startswith('!')):
+            json['message'] = "Unrecognized command. Type '!help' for available commands"
 
         else:
             myMessage = str(json['user_name']) + " " + str(json['message'])
