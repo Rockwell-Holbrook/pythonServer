@@ -1,12 +1,7 @@
 from flask import Flask, render_template
 from flask_socketio import SocketIO
-<<<<<<< Updated upstream
-import sys
-import os
-=======
-import sys, datetime
+import os, sys, datetime
 
->>>>>>> Stashed changes
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'vnkdjnfjknfl1232#'
 socketio = SocketIO(app)
@@ -36,7 +31,7 @@ def handle_my_custom_event(json, methods=['GET', 'POST']):
         
         # The Logic for our !help command.
         elif (str(json['message']) == "!help"):
-            json['message'] = "Commands: !username, !clear, and of course !help!"
+            json['message'] = "Commands: !username, !quit, !clearLog, !store, and of course !help!"
 
         # The Logic for our !store command.
         elif (str(json['message']) == "!store"):
