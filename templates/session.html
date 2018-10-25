@@ -1,47 +1,179 @@
   <!DOCTYPE html>
   <html lang="en">
-  <head>
-    <title>Flask_Chat_App</title>
-  </head>
-  <body>
 
-    <h3 style='color: #ccc;font-size: 30px;'>No message yet..</h3>
-    <div class="message_holder"></div>
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <form action="" method="POST">
-      <input type="text" class="username" placeholder="User Name"/>
-      <input type="text" class="message" placeholder="Messages"/>
-      <input type="submit"/>
-    </form>
+      <style>
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        body {
+          background-color: #f1f1f1;
+        }
+
+        h1 {
+          color: navy;
+          margin-left: 20px;
+        }
+
+        #message-holder {
+          margin: auto;
+          padding: 20px;
+          width: 76%;
+          font-family: 'Open Sans', sans-serif;
+          font-size: 24px;
+          text-align: right;
+        }
+
+        .center {
+            margin: auto;
+            width: 76%;
+            box-shadow:5px 5px 10px grey;
+            background-color: #ffffff; 
+            padding: 10px;
+        }
+
+
+
+        #input-name {
+          position: absolute;
+          padding: 8px;
+          right: 180px;
+          top: 20px;
+        }
+
+
+        #input-div {
+          margin: auto;
+          width: 80%;
+          padding: 20px;
+          box-shadow: 0px 2px 2px 2px grey;
+        }
+
+
+        input, textarea{
+          font:20px/1.4 sans-serif;
+          margin: 10px;
+        }
+
+        .input-group{
+          display: table;
+          border-collapse: collapse;
+          width:100%;
+        }
+        .input-group > div{
+          display: table-cell;
+          vertical-align: middle;  /* needed for Safari */
+        }
+        .input-group-icon{
+          color: #777;
+          width: 250px;
+          padding: 12px;
+        }
+        .input-group-area{
+          width:100%;
+          border-bottom: 1px grey;
+        }
+        .input-group input{
+          border: 0;
+          display: block;
+          width: 95%;
+          padding: 8px;
+        }
+
+
+        .button-small{
+            color: #fff !important;
+            background: #3b5998;
+            word-spacing: 0.25em;
+            font-family: 'Open Sans', sans-serif;
+            text-transform: uppercase;
+            border: none;
+            cursor: pointer;
+            line-height: 22px;
+            padding: 12px 13px 11px;
+            text-align: center;
+            display: inline-block;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            text-decoration: none;
+            text-shadow: none;
+        }
+        .button-small:visited{
+              color: #fff;
+        }
+        .button-small:hover{
+            color: rgba(255,255,255, 0.75);
+            text-decoration: none;
+            -webkit-box-shadow:inset 0 10px 20px rgba(255,255,255, 0.10);
+            -moz-box-shadow: inset 0 10px 20px rgba(255,255,255, 0.10);
+            box-shadow: inset 0 10px 20px rgba(255,255,255, 0.10);
+        }
+        .button-small:active {
+            -webkit-box-shadow: inset 0 2px 2px rgba(0,0,0, 0.3), inset 0 10px 20px rgba(0,0,0, 0.08);
+            -moz-box-shadow: inset 0 2px 2px rgba(0,0,0, 0.3), inset 0 10px 20px rgba(0,0,0, 0.08);
+            box-shadow: inset 0 2px 2px rgba(0,0,0, 0.3), inset 0 10px 20px rgba(0,0,0, 0.08);
+        }
+        .rounded3 {
+          -webkit-border-radius: 3px;
+            -moz-border-radius: 3px;
+            border-radius: 3px;
+        }
+      </style>
+
+      <title>Chat++</title>
+    </head>
+
+
+    <body>
+
+      <div class="center">
+        <h1 id="title-text" style='color: #ccc;font-size: 30px;'>Connecting...</h1>
+        <input id="input-name" class="user" type="text" size="16"  placeholder="Username"/>
+        <div id="message-holder"></div>
+
+        <form id="input-div" class="input-group" action="" method="POST">
+          <div class="input-group-area"><input id="input-message" type="text" class="message" placeholder="Message"/></div>
+          <div class="input-group-icon" >
+            <div id="submit-btn" class="button-small rounded3">Send</div>
+          </div>
+        </form>
+      </div>
+
+      <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
     <script type="text/javascript">
       var socket = io.connect('http://' + document.domain + ':' + location.port);
       socket.on( 'connect', function() {
         socket.emit( 'my event', {
           data: 'User Connected'
-        } )
-        var form = $( 'form' ).on( 'submit', function( e ) {
+        })
+
+        $('#title-text').text("Connection Established")
+
+        $('#submit-btn').on("click", function( e ) {
           e.preventDefault()
-          let user_name = $( 'input.username' ).val()
-          let user_input = $( 'input.message' ).val()
+          console.log("here")
+          let user_name = $( '#input-name' ).val()
+          let user_input = $( '#input-message' ).val()
           socket.emit( 'my event', {
             user_name : user_name,
             message : user_input
           } )
-          $( 'input.message' ).val( '' ).focus()
+          $('#input-message').val('').focus()
         } )
       } )
-      socket.on( 'my response', function( msg ) {
+
+
+      socket.on('my response', function( msg ) {
         console.log( msg )
+
         if( typeof msg.user_name !== 'undefined' ) {
-          $( 'h3' ).remove()
-          $( 'div.message_holder' ).append( '<div><b style="color: #000">'+msg.user_name+'</b> '+msg.message+'</div>' )
+          $('#message-holder').append('<div><b style="color: #000">'+msg.user_name+'</b> '+msg.message+'</div>')
         }
       })
     </script>
 
-  </body>
+    </body>
   </html>
